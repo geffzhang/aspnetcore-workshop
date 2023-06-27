@@ -1,11 +1,9 @@
 @page "/users/{id:long}/delete"
-@using System.ComponentModel
-@using Microsoft.AspNetCore.Components
 @using TimeTracker.Client.Models
 @using TimeTracker.Client.Services
 @attribute [Authorize]
 @inject ApiService ApiService
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 
 <h1>Delete user @(user == null ? string.Empty : user.Name)</h1>
 
@@ -16,15 +14,15 @@
     <div class="alert alert-danger">@errorMessage</div>
 }
 
-<button type="button" class="btn btn-danger" onclick="@DeleteUser">Delete</button>
+<button type="button" class="btn btn-danger" @onclick="DeleteUser">Delete</button>
 <a href="/users" class="btn btn-link">Cancel</a>
 
 @code {
-    [Parameter] private long Id { get; set; }
+    [Parameter] public long Id { get; set; }
     private UserModel user;
     private string errorMessage;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         await LoadUser();
     }
@@ -39,7 +37,7 @@
     {
         if (await ApiService.DeleteAsync($"users/{user.Id}"))
         {
-            UriHelper.NavigateTo("/users");
+            NavigationManager.NavigateTo("/users");
         }
         else
         {

@@ -1,19 +1,18 @@
 ﻿@page "/login"
-@using Microsoft.AspNetCore.Components
 @using TimeTracker.Client.Models
 @using TimeTracker.Client.Security
 @using TimeTracker.Client.Services
 @inject HttpClient Http
 @inject ApiService ApiService
 @inject TokenAuthenticationStateProvider AuthStateProvider
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 
 <h1>Login</h1>
 
 <EditForm Model="@this">
     <div class="form-group">
         <label for="userId">User ID:</label>
-        <InputText id="userId" @bind-value="@userId" class="form-control" />
+        <InputText id="userId" @bind-Value="userId" class="form-control" />
     </div>
 
     @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -23,8 +22,8 @@
         </div>
     }
 
-    <button type="button" class="btn btn-secondary" onclick="@LogInRegular">Login as Regular User</button>
-    <button type="button" class="btn btn-primary" onclick="@LogInAdmin">Login as Admin User</button>
+    <button type="button" class="btn btn-secondary" @onclick="LogInRegular">Login as Regular User</button>
+    <button type="button" class="btn btn-primary" @onclick="LogInAdmin">Login as Admin User</button>
 </EditForm>
 
 @code {
@@ -58,7 +57,7 @@
 
             await AuthStateProvider.SetTokenAndUserAsync(token, user);
 
-            UriHelper.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
         }
         catch (Exception ex)
         {
